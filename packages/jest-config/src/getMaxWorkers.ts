@@ -5,7 +5,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import {availableParallelism} from 'os';
+import {availableParallelism} from 'node:os';
 import type {Config} from '@jest/types';
 
 export default function getMaxWorkers(
@@ -20,6 +20,8 @@ export default function getMaxWorkers(
     return parseWorkers(argv.maxWorkers);
   } else if (defaultOptions && defaultOptions.maxWorkers) {
     return parseWorkers(defaultOptions.maxWorkers);
+  } else if (typeof process.env.JEST_MAX_WORKERS === 'string') {
+    return parseWorkers(process.env.JEST_MAX_WORKERS);
   } else {
     // In watch mode, Jest should be unobtrusive and not use all available CPUs.
     const numCpus = availableParallelism();
